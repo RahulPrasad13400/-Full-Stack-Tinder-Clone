@@ -1,8 +1,43 @@
 import User from "../models/User.js";
+import jwt from 'jsonwebtoken'
 
-export const login = async (req, res) => {
+const signToken = async (id) => {
+  return jwt.sign({id},process.env.JWT_SECRET,{expiresIn : '7d'})
+}
+
+export const login = async (req, res) => { 
+  const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
+    if(!email || !password){
+      return res.status(400).json({
+        success : false,
+        message : "All fields are required"
+      })
+    }
+
+    const user = await User.findOne({email}).select("+password")
+
+    if(!user || (await !matchPassword(password))){
+      return res.status().json({
+        success : false,
+        message : "Invalid credentials"
+      })
+    }
+
+    const token = signToken(user._id)
+
+    res.cookie("jwt",token,{
+      maxAge : 7*24*60*60*1000,
+      httpOnly : true,
+      samesite : "strict",
+      secure : process.env.NODE_ENV === 'production'
+    })
+
+    res.status(200).json({
+      success : true,
+      user
+    })
+
   } catch (error) {
     console.log(error);
     res.json({
@@ -45,9 +80,33 @@ export const signup = async (req, res) => {
       genderPreference,
     });
 
+    const token = signToken(newUser._id)
+
+    res.cookie("jwt",token,{
+      maxAge : 7*24*60*60*1000,
+      httpOnly : true,
+      samesite : "strict",
+      secure : process.env.NODE_ENV === "production",
+    })
+
+    res.status(201).json({
+      success : true,
+      user : newUser,
+    })
+
   } catch (error) {
     console.log(error);
+    res.status(500).json({
+      success : false,
+      message : "Server Error"
+    })
   }
 };
 
-export const logout = async (req, res) => {};
+export const logout = async (req, res) => {
+  res.clearCookie("jwt")
+  res.status(200).json({
+    success : true,
+    message : "Logged out successfully"
+  })
+};
