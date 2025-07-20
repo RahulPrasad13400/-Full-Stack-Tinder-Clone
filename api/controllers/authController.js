@@ -17,7 +17,7 @@ export const login = async (req, res) => {
 
     const user = await User.findOne({email}).select("+password")
 
-    if(!user || (await !matchPassword(password))){
+    if (!user || !(await user.matchPassword(password))){
       return res.status().json({
         success : false,
         message : "Invalid credentials"
@@ -57,7 +57,7 @@ export const signup = async (req, res) => {
       });
     }
     // USER'S ABOVE 18 YEARS SHOULD BE ALLOWED TO CREATE ACCOUNT
-    if (18 < age) {
+    if (18 > age) {
       return res.status(400).json({
         success: false,
         message: "You must be atleast 18 years old",

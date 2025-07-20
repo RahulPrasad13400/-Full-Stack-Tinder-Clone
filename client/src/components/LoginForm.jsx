@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("rahul@gmail.com");
+  const [password, setPassword] = useState("Rahul@123");
 
   const { loading, login } = useAuthStore();
 
