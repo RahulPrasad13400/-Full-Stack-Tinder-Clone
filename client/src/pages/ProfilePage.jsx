@@ -4,7 +4,8 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useUserStore } from "../store/useUserStore";
 
 const ProfilePage = () => {
-  const { authUser } = useAuthStore();
+  const { authUser, checkAuth } = useAuthStore();
+
   const [name, setName] = useState(authUser.name || "");
   const [bio, setBio] = useState(authUser.bio || "");
   const [age, setAge] = useState(authUser.age || "");
@@ -22,6 +23,17 @@ const ProfilePage = () => {
     e.preventDefault();
     updateProfile({ name, bio, age, gender, genderPreference, image });
   };
+
+  const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setImage(reader.result)
+    }
+    reader.readAsDataURL(file)
+  }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -134,6 +146,38 @@ const ProfilePage = () => {
                   />
                 </div>
               </div>
+              <div className="space-y-2 mt-4">
+                <div>
+                  <button
+                    className="border border-pink-600 px-2 py-1 rounded-md shadow-sm font-medium text-pink-600 text-sm bg-white hover:bg-pink-600 hover:text-white transition duration-700 items-center focus:outline-none hover:-translate-y-0.5 active:scale-95"
+                    type="button"
+                    onClick={() => {
+                      fileInputRef.current.click();
+                    }}
+                  >
+                    Upload Image
+                  </button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                </div>
+              </div>
+              {image && (
+                <div className="mt-4">
+                  <img
+                    src={image}
+                    alt="User Image"
+                    className="w-48 h-full object-cover rounded-md"
+                  />
+                </div>
+              )}
+              <button type='submit' className="bg-pink-600 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-pink-700 focus:outline-none mt-4" disabled={loading}>
+                {loading ? "Saving.." : 'Save'}
+              </button>
             </form>
           </div>
         </div>

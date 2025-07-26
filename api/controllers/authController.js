@@ -24,7 +24,7 @@ export const login = async (req, res) => {
       })
     }
 
-    const token = signToken(user._id)
+    const token = await signToken(user._id)
 
     res.cookie("jwt",token,{
       maxAge : 7*24*60*60*1000,
@@ -80,12 +80,12 @@ export const signup = async (req, res) => {
       genderPreference,
     });
 
-    const token = signToken(newUser._id)
+    const token = await signToken(newUser._id)
 
     res.cookie("jwt",token,{
       maxAge : 7*24*60*60*1000,
       httpOnly : true,
-      samesite : "strict",
+      sameSite : "lax",
       secure : process.env.NODE_ENV === "production",
     })
 

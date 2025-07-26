@@ -8,8 +8,10 @@ export const updateProfile = async (req, res) => {
     if (image) {
         // base 64 format
         if(image.startsWith("data:image")){
+          console.log("I work here")
             try {
                 const uploadResponse = await cloudinary.uploader.upload(image)
+                console.timeLog("upload response", uploadResponse)
                 updatedData.image = uploadResponse.secure_url
             } catch (error) {
                 return res.status(400).json({

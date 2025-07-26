@@ -38,8 +38,8 @@ function Header() {
                 }}
                 className="flex items-center space-x-2 focus:outline-none"
               >
-                <img
-                  className="w-10 h-10 object-cover border-2 rounded-full"
+                <img  
+                  className="w-10 h-10 object-cover border-2 rounded-full  border-white"
                   src={
                     authUser?.image ||
                     "https://img.freepik.com/premium-photo/memoji-emoji-handsome-smiling-man-white-background_826801-6987.jpg?semt=ais_hybrid&w=740"
