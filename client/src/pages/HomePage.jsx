@@ -1,12 +1,9 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import Sidebar from '../components/Sidebar'
 
 const HomePage = () => {
   return (
-    <div>HomePage
-      <Link to={'/profile'}>
-        profile
-      </Link>
+    <div className='flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-pink-50 to-pink-100 overflow-hidden'>
+      <Sidebar />
     </div>
   )
 }
