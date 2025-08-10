@@ -28,10 +28,9 @@ export const swipeRight = async (req, res) => {
     }
 
     res.status(200).json({
-      success : true,
-      user : currentUser
-    })
-
+      success: true,
+      user: currentUser,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
