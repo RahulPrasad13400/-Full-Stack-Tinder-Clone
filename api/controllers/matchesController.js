@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { getConnectedUsers, getIO } from "../socket/socket.server.js";
 
 export const swipeRight = async (req, res) => {
   try {
@@ -16,15 +17,35 @@ export const swipeRight = async (req, res) => {
     if (!currentUser.likes.includes(likedUserId)) {
       currentUser.likes.push(likedUserId);
       await currentUser.save();
-    }
 
-    // it the other user already likes us, its a match so lets update both the user
-    if (likedUser.likes.includes(currentUser.id)) {
-      currentUser.matches.push(likedUserId);
-      likedUser.matches.push(currentUser.id);
+      // it the other user already likes us, its a match so lets update both the user
+      if (likedUser.likes.includes(currentUser.id)) {
+        currentUser.matches.push(likedUserId);
+        likedUser.matches.push(currentUser.id);
 
-      // save both the user at the same time
-      await Promise.all([await currentUser.save(), await likedUser.save()]);
+        // save both the user at the same time
+        await Promise.all([await currentUser.save(), await likedUser.save()]);
+
+        // SEND NOTIFICATION IF ITS A MATCH - SOCKET IO
+        const connectedUsers = getConnectedUsers()
+        const io = getIO()
+        const likedUserSocketId = connectedUsers.get(likedUserId)
+
+        if(likedUserSocketId){
+          io.to(likedUserSocketId).emit("newMatch",{
+            _id : currentUser._id,
+            name : currentUser.name,
+            image : currentUser.image
+          })
+        }
+
+        const currentSocketId = connectedUsers.get(currentUser._id.toString())
+          io.to(currentSocketId).emit("newMatch",{
+            _id : likedUser._id,
+            name : likedUser.name,
+            image : likedUser.image
+          })
+      }
     }
 
     res.status(200).json({

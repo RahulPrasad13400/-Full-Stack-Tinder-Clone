@@ -8,16 +8,21 @@ import userRoutes from './routes/userRoutes.js'
 import matchesRoutes from './routes/matchesRoutes.js'
 import messageRoutes from './routes/messageRoutes.js'
 import { connectDB } from './config/db.js';
+import { createServer } from 'http'
 
 dotenv.config()
 
 const app = express()
+const httpServer = createServer(app)
+
 const PORT = process.env.PORT || 5000
+
+initializeSocket(httpServer)
 
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin : 'http://localhost:5173',
+    origin : process.env.CLIENT_URL,
     credentials : true
 }))
 
@@ -27,7 +32,7 @@ app.use("/api/messages", messageRoutes)
 app.use("/api/matches", matchesRoutes)
 
 
-app.listen(PORT,()=>{
+httpServer.listen(PORT,()=>{
     console.log("server started running at "+PORT)
     connectDB()
 })
