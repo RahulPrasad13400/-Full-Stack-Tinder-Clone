@@ -5,14 +5,29 @@ import Header from "../components/Header";
 import { Frown } from "lucide-react";
 import SwipeArea from "../components/SwipeArea";
 import SwipeFeedback from "../components/SwipeFeedback";
+import { useAuthStore } from "../store/useAuthStore";
 
 const HomePage = () => {
-  const { isLoadingUserProfiles, getUserProfiles, userProfiles } =
-    useMatchStore();
+  const {
+    isLoadingUserProfiles,
+    getUserProfiles,
+    userProfiles,
+    subscribeToNewMatches,
+    unsubscribeFromNewMatches
+  } = useMatchStore();
+
+  const { authUser } = useAuthStore()
 
   useEffect(() => {
     getUserProfiles();
   }, [getUserProfiles]);
+
+  useEffect(()=>{
+    authUser && subscribeToNewMatches()
+    return () => {
+      unsubscribeFromNewMatches()
+    }
+  },[subscribeToNewMatches, unsubscribeFromNewMatches, authUser])
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-pink-50 to-pink-100 overflow-hidden">
@@ -39,11 +54,15 @@ const HomePage = () => {
 };
 
 const NoMoreProfiles = () => (
-	<div className='flex flex-col items-center justify-center h-full text-center p-8'>
-		<Frown className='text-pink-400 mb-6' size={80} />
-		<h2 className='text-3xl font-bold text-gray-800 mb-4'>Woah there, speedy fingers!</h2>
-		<p className='text-xl text-gray-600 mb-6'>Bro are you OK? Maybe it&apos;s time to touch some grass.</p>
-	</div>
+  <div className="flex flex-col items-center justify-center h-full text-center p-8">
+    <Frown className="text-pink-400 mb-6" size={80} />
+    <h2 className="text-3xl font-bold text-gray-800 mb-4">
+      Woah there, speedy fingers!
+    </h2>
+    <p className="text-xl text-gray-600 mb-6">
+      Bro are you OK? Maybe it&apos;s time to touch some grass.
+    </p>
+  </div>
 );
 
 const LoadingUI = () => {
