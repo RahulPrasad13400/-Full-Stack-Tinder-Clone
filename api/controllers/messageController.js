@@ -11,7 +11,7 @@ export const sendMessage = async (req, res) => {
       content,
     });
 
-    const io = getIO()
+    const io = getIO()   
     const connectedUsers = getConnectedUsers()
     const receiverSocketId = connectedUsers.get(receiverId)
     

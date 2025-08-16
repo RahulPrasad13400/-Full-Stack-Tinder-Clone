@@ -67,7 +67,7 @@ const generateRandomUser = (gender, index) => {
 		image: `/${gender}/${index + 1}.jpg`,
 	};
 };
-
+ 
 const seedUsers = async () => {
 	try {
 		await mongoose.connect(process.env.MONGO_URI);

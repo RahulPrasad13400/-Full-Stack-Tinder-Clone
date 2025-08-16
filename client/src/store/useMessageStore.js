@@ -5,13 +5,13 @@ import { getSocket } from "../socket/socket.client";
 import { useAuthStore } from "./useAuthStore";
 
 export const useMessageStore = create((set) => ({
-  message: [],
+  messages: [],
   loading: true,
 
   sendMessage: async (receiverId, content) => {
     try {
       set((state) => ({
-        message: [
+        messages: [
           ...state.message,
           { sender: useAuthStore.getState().authUser._id, content },
         ],
@@ -42,7 +42,7 @@ export const useMessageStore = create((set) => ({
   subscribeToMessages: async () => {
     const socket = getSocket();
     socket.on("newMessage", ({ message }) => {
-      set((state) => ({ message: [...state.message, message] }));
+      set((state) => ({ messages: [...state.message, message] }));
     });
   },
 

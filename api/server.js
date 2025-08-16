@@ -9,6 +9,7 @@ import matchesRoutes from './routes/matchesRoutes.js'
 import messageRoutes from './routes/messageRoutes.js'
 import { connectDB } from './config/db.js';
 import { createServer } from 'http'
+import { initializeSocket } from './socket/socket.server.js';
 
 dotenv.config()
 
