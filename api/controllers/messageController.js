@@ -2,10 +2,11 @@ import Message from "../models/Message.js";
 import { getConnectedUsers, getIO } from "../socket/socket.server.js";
 
 export const sendMessage = async (req, res) => {
+  console.log("send Message got called")
   try {
     const { content, receiverId } = req.body;
 
-    const newMessage = await new Message.create({
+    const newMessage = await Message.create({
       sender: req.user.id,
       receiver: receiverId,
       content,

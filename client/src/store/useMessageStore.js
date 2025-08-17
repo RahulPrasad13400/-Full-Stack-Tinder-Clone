@@ -12,7 +12,7 @@ export const useMessageStore = create((set) => ({
     try {
       set((state) => ({
         messages: [
-          ...state.message,
+          ...state.messages,
           { sender: useAuthStore.getState().authUser._id, content },
         ],
       }));
@@ -20,9 +20,10 @@ export const useMessageStore = create((set) => ({
         receiverId,
         content,
       });
+      console.log("res : ", res)
     } catch (error) {
+      console.log("error at send message :", error);
       toast.error(error.response.data.message || "Something went wrong");
-      console.log(error);
     }
   },
 

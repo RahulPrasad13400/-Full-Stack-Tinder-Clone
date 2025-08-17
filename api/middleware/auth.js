@@ -3,7 +3,6 @@ import User from "../models/User.js";
 
 export const protectRoute = async (req, res, next) => {
   try {
-
     // FOR GETTING A TOKEN THAT IS NAMED JWT (JWT ENNA PERE ANE LOGIN AND SIGNUP IN KODUTHEKENATH)
 
     const token = req.cookies.jwt;
